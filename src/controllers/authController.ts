@@ -28,7 +28,6 @@ export const registerUser = async (req: Request, res: Response) => {
       email: user.email,
       role: user.role,
       photo: user.photo,
-      token: generateToken(user._id as string), // Convert _id to a string
     });
   } else {
     res.status(400).json({ message: "Invalid user data" });
@@ -56,8 +55,8 @@ export const loginUser = async (req: Request, res: Response) => {
       name: user.name,
       email: user.email,
       role: user.role,
+      isVerified: user.isVerified,
       photo: user.photo,
-      token, // Optional: Also send the token in the response body
     });
   } else {
     res.status(401).json({ message: "Invalid email or password" });
