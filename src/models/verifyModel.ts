@@ -2,7 +2,7 @@ import mongoose, { Document, Schema } from "mongoose";
 
 export interface IVerify extends Document {
   user: mongoose.Types.ObjectId;
-  code: string;
+  code: number;
   expiresAt: Date;
 }
 
@@ -14,7 +14,7 @@ const verifySchema = new Schema<IVerify>(
       required: true,
     },
     code: {
-      type: String,
+      type: Number,
       required: true,
     },
     expiresAt: {

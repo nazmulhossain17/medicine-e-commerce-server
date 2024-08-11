@@ -90,8 +90,10 @@ export const sendVerificationCode = async (req: Request, res: Response) => {
     return res.status(400).json({ message: "User is already verified" });
   }
 
-  // Generate a random verification code
-  const verificationCode = crypto.randomBytes(3).toString("hex").toUpperCase(); // 6-character code
+  // Generate a 6-digit numeric verification code
+  const verificationCode = Math.floor(
+    100000 + Math.random() * 900000
+  ).toString();
 
   // Set expiration time for the verification code (e.g., 1 hour)
   const expiresAt = new Date(Date.now() + 60 * 60 * 1000);
