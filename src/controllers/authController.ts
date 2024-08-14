@@ -47,7 +47,7 @@ export const loginUser = async (req: Request, res: Response) => {
       httpOnly: true, // Ensure the cookie is sent only over HTTP(S), not accessible via JavaScript
       secure: process.env.NODE_ENV === "production", // Set to true in production
       sameSite: "strict", // Adjust according to your needs (strict, lax, none)
-      maxAge: 72 * 60 * 60 * 1000, // Cookie expires in 72 hours
+      maxAge: 60 * 60, // 1 hour in seconds
     });
 
     res.json({
@@ -230,5 +230,54 @@ export const verifyUser = async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Error verifying user:", error);
     res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const updateUser = async (req: Request, res: Response) => {
+  try {
+    const userId = req.params.userId;
+    console.log(userId);
+    const { name, email, photo } = req.body;
+
+    // Find the user by id
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Update the user's details with the new data, only if the data is provided
+    user.name = name || user.name;
+    user.email = email || user.email;
+    user.photo = photo || user.photo;
+
+    // Save the updated user
+    const updatedUser = await user.save();
+
+    // Return updated user data (excluding the password)
+    return res.status(200).json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      photo: updatedUser.photo,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const getUserById = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const user = await User.findById(id).select("-password -isVerified");
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    return res.status(200).json({ user });
+  } catch (error) {
+    return res.status(500).json({ message: "Server error", error: error });
   }
 };
