@@ -33,7 +33,7 @@ This project provides the backend API for a medicine e-commerce website. It hand
 4. Start the server:
   ```npm start
 
-API Endpoints
+## API Endpoints
 /api/v1 - Authentication routes
 /api/v2 - Category management routes
 /api/v3 - Product management routes
