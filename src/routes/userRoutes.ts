@@ -1,8 +1,11 @@
 import express from "express";
 import {
+  deleteUser,
+  getAllUsers,
   getUserById,
   loginUser,
   logoutUser,
+  makeUserAdmin,
   registerUser,
   sendVerificationCode,
   updateUser,
@@ -20,5 +23,8 @@ router.post("/verify-user", verifyUser);
 
 router.put("/update/:userId", updateUser);
 router.get("/profile/:id", getUserById);
+router.get("/users", getAllUsers);
+router.delete("/users/:id", deleteUser);
+router.post("/make-admin/:requesterId", makeUserAdmin);
 
 export default router;

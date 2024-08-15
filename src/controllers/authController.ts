@@ -74,6 +74,91 @@ export const logoutUser = (req: Request, res: Response) => {
   res.status(200).json({ message: "Logged out successfully" });
 };
 
+export const getAllUsers = async (req: Request, res: Response) => {
+  try {
+    // Retrieve all users from the database
+    const users = await User.find();
+
+    // Check if any users were found
+    if (users.length === 0) {
+      return res.status(404).json({ message: "No users found" });
+    }
+
+    // Return the list of users
+    res.status(200).json(
+      users.map((user) => ({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        photo: user.photo,
+      }))
+    );
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const deleteUser = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  try {
+    // Find and delete the user by ID
+    const user = await User.findByIdAndDelete(id);
+
+    // Check if user was found and deleted
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Return a success response
+    res.status(200).json({ message: "User deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const makeUserAdmin = async (req: Request, res: Response) => {
+  const { userId } = req.body;
+  const requesterId = req.params.requesterId; // Get requesterId from URL parameters
+
+  try {
+    // Check if requester is a superAdmin
+    const requester = await User.findById(requesterId);
+    if (!requester || requester.role !== "superAdmin") {
+      return res.status(403).json({
+        message: "Forbidden: Only superAdmin can perform this action",
+      });
+    }
+
+    // Find the user to be promoted
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Update user role to admin
+    user.role = "admin";
+    await user.save();
+
+    // Return success response
+    res.status(200).json({
+      message: "User role updated to admin",
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 export const sendVerificationCode = async (req: Request, res: Response) => {
   const { email } = req.body;
 

@@ -63,6 +63,32 @@ export const getShippingAddresses = async (req: Request, res: Response) => {
   }
 };
 
+export const deleteShippingAddress = async (req: Request, res: Response) => {
+  try {
+    // Extract the address ID from the request parameters
+    const addressId = req.params.addressId;
+
+    // Ensure that an address ID was provided
+    if (!addressId) {
+      return res.status(400).json({ message: "Address ID is required" });
+    }
+
+    // Find and delete the shipping address by its ID
+    const result = await ShippingAddress.findByIdAndDelete(addressId);
+
+    // Check if the address was found and deleted
+    if (!result) {
+      return res.status(404).json({ message: "Shipping address not found" });
+    }
+
+    // Send a success response
+    res.status(200).json({ message: "Shipping address deleted successfully" });
+  } catch (error) {
+    // Handle any errors that occurred during the operation
+    res.status(500).json({ message: "Error deleting shipping address", error });
+  }
+};
+
 export const getAllShippingAddresses = async (req: Request, res: Response) => {
   try {
     const userId = req.params.id; // Get the user ID from URL params
