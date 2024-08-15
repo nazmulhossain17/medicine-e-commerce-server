@@ -11,7 +11,6 @@ This project provides the backend API for a medicine e-commerce website. It hand
 - User authentication and authorization
 - Product management (CRUD operations)
 - Order processing
-- [Add other major features here]
 
 ## Technologies Used
 
