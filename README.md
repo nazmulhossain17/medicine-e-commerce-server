@@ -28,9 +28,11 @@ This project provides the backend API for a medicine e-commerce website. It hand
    ```bash
    cd medicine-e-commerce-server
 3. Install dependencies:
-   ```npm install
+   ```bash
+   npm install
 4. Start the server:
-  ```npm start
+  ```bash
+npm start
 
 ## API Endpoints
 /api/v1 - Authentication routes
